@@ -6,12 +6,13 @@ interface IUserRequest {
     name: string;
     email: string;
     userCpf: string;
-    admin?: boolean   
+    admin?: boolean;
+    password: string;
 }
 
 export class CreateUserService {
 
-    async execute({ name, email, userCpf, admin} : IUserRequest) {
+    async execute({ name, email, userCpf, admin, password} : IUserRequest) {
         const usersRpository = getCustomRepository(UsersRepositories);
     
         if (!cpf.isValid(userCpf)){
@@ -30,7 +31,7 @@ export class CreateUserService {
         }
 
         const newUser = usersRpository.create({
-            name, email, userCpf, admin
+            name, email, userCpf, admin, password
         });
 
         await usersRpository.save(newUser);
