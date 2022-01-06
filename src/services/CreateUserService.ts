@@ -1,6 +1,8 @@
 import { getCustomRepository } from "typeorm";
 import { UsersRepositories } from "../repositories/UsersRepository";
-import { cpf } from 'cpf-cnpj-validator';
+import { cpf } from "cpf-cnpj-validator";
+//import { createHash, Hash } from "crypto";
+//const crypto = require('crypto');
 
 interface IUserRequest {
     name: string;
@@ -8,13 +10,14 @@ interface IUserRequest {
     userCpf: string;
     admin?: boolean;
     password: string;
+    idTickets: string;
 }
 
 export class CreateUserService {
 
-    async execute({ name, email, userCpf, admin, password} : IUserRequest) {
+    async execute({ name, email, userCpf, admin = false, password, idTickets} : IUserRequest) {
         const usersRpository = getCustomRepository(UsersRepositories);
-    
+
         if (!cpf.isValid(userCpf)){
             throw new Error("CPF incorreto!")
         }
@@ -30,8 +33,10 @@ export class CreateUserService {
             throw new Error("Usuário já existe!");
         }
 
+        //const hash = crypto.createHash('sha256')
+
         const newUser = usersRpository.create({
-            name, email, userCpf, admin, password
+            name, email, userCpf, admin, password, idTickets
         });
 
         await usersRpository.save(newUser);

@@ -8,19 +8,18 @@ interface IEventRequest {
     desc: string;
     local: string;
     price: number;
-    date: Date;   
+    date: Date;
 }
-
 
 export class CreateEventService {
     async execute({name, org, event, desc, local, price, date} : IEventRequest) {
         const eventsRepositories = getCustomRepository(EventsRepositories);
 
-        if(!name || !org || !event || !desc || !local || !date){
+        if(!name || !org || !event || !desc || !local){
             throw new Error("Dados não inseridos!")
         }
 
-        const eventExists = await eventsRepositories.findOne({name, org, desc, date});
+        const eventExists = await eventsRepositories.findOne({name, desc});
 
         if (eventExists) {
             throw new Error("Evento já existe!")
